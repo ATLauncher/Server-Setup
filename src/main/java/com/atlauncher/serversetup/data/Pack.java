@@ -21,25 +21,10 @@ import java.util.List;
 
 public class Pack {
     private List<Download> downloads;
-    private int permgen;
-    private int ram;
-    private String extraArguments;
     private String serverJar;
 
     public List<Download> getDownloads() {
         return this.downloads;
-    }
-
-    public int getPermgen() {
-        return this.permgen;
-    }
-
-    public int getRam() {
-        return this.ram;
-    }
-
-    public String getExtraArguments() {
-        return this.extraArguments;
     }
 
     public String getServerJar() {

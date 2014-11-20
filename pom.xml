@@ -78,7 +78,7 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<finalName>ATLauncher-${project.version}</finalName>
+							<finalName>SetupServer-${project.version}</finalName>
 						</configuration>
 					</execution>
 				</executions>

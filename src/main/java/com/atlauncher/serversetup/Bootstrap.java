@@ -18,10 +18,12 @@
 package com.atlauncher.serversetup;
 
 import com.atlauncher.serversetup.data.Download;
+import com.atlauncher.serversetup.data.Downloadable;
 import com.atlauncher.serversetup.data.Pack;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -31,7 +33,7 @@ import java.util.Locale;
 
 public class Bootstrap {
     public static Path basePath = Paths.get("");
-    public static Path jsonFile = Paths.get("libraries/pack.json");
+    public static Path jsonFile = basePath.resolve("pack.json");
     public static final Gson GSON = new Gson();
     public static Pack pack;
 
@@ -69,6 +71,44 @@ public class Bootstrap {
             System.out.println("Downloading " + download.getURL() + " to " + download.getPath(basePath)
                     .toAbsolutePath());
             download.getDownloadable(basePath).download();
+        }
+
+        Path launchServerBatPath = basePath.resolve("LaunchServer.bat");
+        String launchServerBat = new Downloadable("http://download.nodecdn.net/containers/atl/serversetup/LaunchServer"
+                + ".bat", null, null).getContents();
+        BufferedWriter bw = null;
+        try {
+            bw = Files.newBufferedWriter(launchServerBatPath, StandardCharsets.UTF_8);
+            bw.write(launchServerBat.replace("%%SERVERJAR%%", pack.getServerJar()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Path launchServerShPath = basePath.resolve("LaunchServer.sh");
+        String launchServerSh = new Downloadable("http://download.nodecdn.net/containers/atl/serversetup/LaunchServer" +
+                ".sh", null, null).getContents();
+        bw = null;
+        try {
+            bw = Files.newBufferedWriter(launchServerShPath, StandardCharsets.UTF_8);
+            bw.write(launchServerSh.replace("%%SERVERJAR%%", pack.getServerJar()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         System.out.println("Server has now been setup! You can now run " + pack.getServerJar() + " to start the " +
