@@ -34,8 +34,8 @@ public class Pack {
         return this.permgen;
     }
 
-    public int getMinimumRam() {
-        return this.minimumRam;
+    public int getRam() {
+        return this.ram;
     }
 
     public String getExtraArguments() {

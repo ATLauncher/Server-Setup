@@ -68,6 +68,7 @@ public class Bootstrap {
         for (Download download : pack.getDownloads()) {
             System.out.println("Downloading " + download.getURL() + " to " + download.getPath(basePath)
                     .toAbsolutePath());
+            download.getDownloadable(basePath).download();
         }
 
         System.out.println("Server has now been setup! You can now run " + pack.getServerJar() + " to start the " +

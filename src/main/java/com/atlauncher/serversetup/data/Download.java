@@ -23,6 +23,7 @@ public class Download {
     private String filename;
     private String url;
     private String path;
+    private String hash;
 
     public String getURL() {
         return url;
@@ -30,5 +31,9 @@ public class Download {
 
     public Path getPath(Path basePath) {
         return basePath.resolve(filename);
+    }
+
+    public Downloadable getDownloadable(Path basePath) {
+        return new Downloadable(this.url, this.getPath(basePath), this.hash);
     }
 }
