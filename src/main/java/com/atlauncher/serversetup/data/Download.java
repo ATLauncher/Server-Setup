@@ -36,4 +36,8 @@ public class Download {
     public Downloadable getDownloadable(Path basePath) {
         return new Downloadable(this.url, this.getPath(basePath), this.hash);
     }
+
+    public String getFilename() {
+        return this.filename;
+    }
 }

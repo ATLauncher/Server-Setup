@@ -22,6 +22,14 @@ import com.atlauncher.serversetup.data.Downloadable;
 import com.atlauncher.serversetup.data.Pack;
 import com.google.gson.Gson;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
+import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -35,7 +43,10 @@ public class Bootstrap {
     public static Path basePath = Paths.get("");
     public static Path jsonFile = basePath.resolve("pack.json");
     public static final Gson GSON = new Gson();
+    public static boolean isHeadless = GraphicsEnvironment.getLocalGraphicsEnvironment().isHeadlessInstance();
     public static Pack pack;
+    public static JLabel doingLabel;
+    public static JProgressBar progressBar;
 
     public static void main(String[] args) {
         Locale.setDefault(Locale.ENGLISH); // Set English as the default locale
@@ -44,6 +55,32 @@ public class Bootstrap {
         if (!Files.exists(jsonFile)) {
             System.err.println("Error setting up the server. The file " + jsonFile.toAbsolutePath() + " doesn't " +
                     "exist!");
+        }
+
+        if (isHeadless) {
+            System.out.println("No graphics environment detected, so running command line only!");
+        } else {
+            System.out.println("Graphics environment detected, so running with GUI!");
+            final JFrame frame = new JFrame();
+            progressBar = new JProgressBar();
+            progressBar.setMaximum(100);
+            doingLabel = new JLabel("Setting up the server!", SwingConstants.CENTER);
+
+            frame.setTitle("ATLauncher Server Setup");
+            frame.setSize(500, 100);
+            frame.setResizable(false);
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            frame.setLocationRelativeTo(null);
+            frame.getContentPane().setLayout(new BorderLayout());
+            frame.getContentPane().add(progressBar, BorderLayout.SOUTH);
+            frame.getContentPane().add(doingLabel, BorderLayout.NORTH);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    frame.setVisible(true);
+                }
+            });
         }
 
         BufferedReader reader = null;
@@ -68,14 +105,23 @@ public class Bootstrap {
         System.out.println("Setting up the server!");
 
         for (Download download : pack.getDownloads()) {
+            if (!isHeadless) {
+                doingLabel.setText("Downloading " + download.getFilename());
+                progressBar.setValue(30);
+            }
             System.out.println("Downloading " + download.getURL() + " to " + download.getPath(basePath)
                     .toAbsolutePath());
             download.getDownloadable(basePath).download();
         }
 
+        if (!isHeadless) {
+            doingLabel.setText("Creating LaunchServer scripts!");
+            progressBar.setValue(60);
+        }
+
         Path launchServerBatPath = basePath.resolve("LaunchServer.bat");
-        String launchServerBat = new Downloadable("http://download.nodecdn.net/containers/atl/serversetup/LaunchServer"
-                + ".bat", null, null).getContents();
+        String launchServerBat = new Downloadable("http://download.nodecdn" +
+                ".net/containers/atl/serversetup/LaunchServer" + ".bat", null, null).getContents();
         BufferedWriter bw = null;
         try {
             bw = Files.newBufferedWriter(launchServerBatPath, StandardCharsets.UTF_8);
@@ -93,8 +139,8 @@ public class Bootstrap {
         }
 
         Path launchServerShPath = basePath.resolve("LaunchServer.sh");
-        String launchServerSh = new Downloadable("http://download.nodecdn.net/containers/atl/serversetup/LaunchServer" +
-                ".sh", null, null).getContents();
+        String launchServerSh = new Downloadable("http://download.nodecdn" +
+                ".net/containers/atl/serversetup/LaunchServer" + ".sh", null, null).getContents();
         bw = null;
         try {
             bw = Files.newBufferedWriter(launchServerShPath, StandardCharsets.UTF_8);
@@ -111,7 +157,20 @@ public class Bootstrap {
             }
         }
 
+
         System.out.println("Server has now been setup! You can now run " + pack.getServerJar() + " to start the " +
                 "server or alternatively use the LaunchServer script!");
+
+        if (!isHeadless) {
+            doingLabel.setText("Server finished setup!");
+            progressBar.setValue(100);
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.exit(0);
     }
 }

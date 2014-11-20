@@ -19,7 +19,7 @@
 
 	<properties>
 		<project.jdk.version>1.7</project.jdk.version>
-		<mainclass>com.atlauncher.serversetup.bootstrap</mainclass>
+		<mainclass>com.atlauncher.serversetup.Bootstrap</mainclass>
 	</properties>
 
 	<dependencies>
