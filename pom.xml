@@ -4,8 +4,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.atlauncher</groupId>
-	<artifactId>server-setup</artifactId>
-	<name>ATLauncher</name>
+	<artifactId>serversetup</artifactId>
+	<name>ATLauncher Server Setup</name>
 	<version>1.0.0.0</version>
 	<organization>
 		<name>ATLauncher</name>
@@ -19,7 +19,7 @@
 
 	<properties>
 		<project.jdk.version>1.7</project.jdk.version>
-		<mainclass>com.atlauncher.server-setup.bootstrap</mainclass>
+		<mainclass>com.atlauncher.serversetup.bootstrap</mainclass>
 	</properties>
 
 	<dependencies>
