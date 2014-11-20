@@ -20,29 +20,29 @@ package com.atlauncher.serversetup.data;
 import java.util.List;
 
 public class Pack {
-    private List<Download> toDownload;
-    private int permGen;
-    private int minimumRam;
+    private List<Download> downloads;
+    private int permgen;
+    private int ram;
     private String extraArguments;
     private String serverJar;
 
     public List<Download> getDownloads() {
-        return this.toDownload;
+        return this.downloads;
     }
 
-    public int getPermGen() {
-        return permGen;
+    public int getPermgen() {
+        return this.permgen;
     }
 
     public int getMinimumRam() {
-        return minimumRam;
+        return this.minimumRam;
     }
 
     public String getExtraArguments() {
-        return extraArguments;
+        return this.extraArguments;
     }
 
     public String getServerJar() {
-        return serverJar;
+        return this.serverJar;
     }
 }
