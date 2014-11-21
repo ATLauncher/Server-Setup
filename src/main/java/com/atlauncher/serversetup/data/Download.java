@@ -30,7 +30,7 @@ public class Download {
     }
 
     public Path getPath(Path basePath) {
-        return basePath.resolve(filename);
+        return basePath.resolve(this.path + this.filename);
     }
 
     public Downloadable getDownloadable(Path basePath) {
