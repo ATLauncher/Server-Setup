@@ -18,6 +18,7 @@
 package com.atlauncher.serversetup.gui;
 
 import com.atlauncher.serversetup.data.Downloadable;
+import com.atlauncher.serversetup.utils.FileUtils;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -50,6 +51,7 @@ public class Browser extends JFrame {
     private final JLabel lblStatus = new JLabel();
 
     private Path saveTo;
+    public boolean waiting = false;
 
     public Browser(Path saveTo) {
         super();
@@ -60,6 +62,7 @@ public class Browser extends JFrame {
 
     private void initComponents() {
         createScene();
+        setIconImage(FileUtils.getImage("/assets/image/Icon.png"));
 
         setTitle("ATLauncher Server Setup Downloader");
 
@@ -98,7 +101,7 @@ public class Browser extends JFrame {
                                 if (download.isDownloadable()) {
                                     Browser.this.setVisible(false);
                                     download.download();
-                                    Browser.this.dispose();
+                                    waiting = true;
                                 }
                             }
                         });
@@ -112,7 +115,7 @@ public class Browser extends JFrame {
                                 @Override
                                 public void run() {
                                     JOptionPane.showMessageDialog(panel, (value != null) ? engine.getLocation() +
-                                                    "\n" + value.getMessage() : engine.getLocation() + "\nUnexpected " +
+                                            "\n" + value.getMessage() : engine.getLocation() + "\nUnexpected " +
                                             "error.", "Loading error...", JOptionPane.ERROR_MESSAGE);
                                 }
                             });
@@ -129,6 +132,10 @@ public class Browser extends JFrame {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                waiting = false;
+                if(!isVisible()) {
+                    setVisible(true);
+                }
                 String tmp = toURL(url);
 
                 if (tmp == null) {

@@ -294,6 +294,7 @@ public class Downloadable {
 
     public boolean isDownloadable() {
         return getConnection().getContentType().equalsIgnoreCase("application/zip") || getConnection().getContentType
-                ().equalsIgnoreCase("application/jar");
+                ().equalsIgnoreCase("application/jar") || getConnection().getContentType().equalsIgnoreCase
+                ("application/java-archive");
     }
 }

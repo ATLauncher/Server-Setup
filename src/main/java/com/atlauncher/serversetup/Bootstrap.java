@@ -21,20 +21,14 @@ import com.atlauncher.serversetup.data.Download;
 import com.atlauncher.serversetup.data.Downloadable;
 import com.atlauncher.serversetup.data.Pack;
 import com.atlauncher.serversetup.gui.Browser;
+import com.atlauncher.serversetup.utils.FileUtils;
 import com.google.gson.Gson;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
@@ -69,6 +63,7 @@ public class Bootstrap {
         } else {
             System.out.println("Graphics environment detected, so running with GUI!");
             final JFrame frame = new JFrame();
+            frame.setIconImage(FileUtils.getImage("/assets/image/Icon.png"));
             progressBar = new JProgressBar();
             progressBar.setMaximum(100);
             doingLabel = new JLabel("Setting up the server!", SwingConstants.CENTER);
@@ -127,7 +122,7 @@ public class Bootstrap {
                 Browser browser = new Browser(download.getPath(basePath));
                 browser.setVisible(true);
                 browser.loadURL(download.getURL());
-                while (browser.isDisplayable()) {
+                while (!browser.waiting) {
                     System.out.println("Waiting for download to " + download.getPath(basePath).toAbsolutePath() + "!");
                     try {
                         Thread.sleep(500);
