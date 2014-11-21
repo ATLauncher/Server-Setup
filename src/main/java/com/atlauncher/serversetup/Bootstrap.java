@@ -126,7 +126,7 @@ public class Bootstrap {
             if (download.isBrowserDownload()) {
                 Browser browser = new Browser(download.getPath(basePath));
                 browser.setVisible(true);
-                browser.loadURL("http://www.atlauncher.com/downloads");
+                browser.loadURL(download.getURL());
                 while (browser.isDisplayable()) {
                     System.out.println("Waiting for download to " + download.getPath(basePath).toAbsolutePath() + "!");
                     try {

@@ -37,6 +37,14 @@ Download and install the latest version from [Oracle's Java Downloads page](http
 
 Install Apache Maven via the official [Apache Maven Install Docs](http://maven.apache.org/download.cgi#Installation).
 
+##### Fix JavaFX
+
+Open up a terminal to the root directory of the project and run the following command (with admin privelages) 'mvn com.zenjava:javafx-maven-plugin:2.0:fix-classpath' which will make sure JavaFX is in your classpath when compiling.
+
+##### Building a Jar
+
+To build a jar, you need to run 'mvn jfx:jar' which will generate a jar and a lib directory in the target/jfx/ folder
+
 
 ### Versioning System
 

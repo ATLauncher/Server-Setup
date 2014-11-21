@@ -22,15 +22,19 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.JFXPanel;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -108,8 +112,8 @@ public class Browser extends JFrame {
                                 @Override
                                 public void run() {
                                     JOptionPane.showMessageDialog(panel, (value != null) ? engine.getLocation() +
-                                            "\n" + value.getMessage() : engine.getLocation() + "\nUnexpected error.",
-                                            "Loading error...", JOptionPane.ERROR_MESSAGE);
+                                                    "\n" + value.getMessage() : engine.getLocation() + "\nUnexpected " +
+                                            "error.", "Loading error...", JOptionPane.ERROR_MESSAGE);
                                 }
                             });
                         }
