@@ -123,7 +123,6 @@ public class Bootstrap {
                 browser.setVisible(true);
                 browser.loadURL(download.getURL());
                 while (!browser.waiting) {
-                    System.out.println("Waiting for download to " + download.getPath(basePath).toAbsolutePath() + "!");
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {

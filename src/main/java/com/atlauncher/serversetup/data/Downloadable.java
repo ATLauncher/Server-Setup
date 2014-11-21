@@ -20,8 +20,6 @@ package com.atlauncher.serversetup.data;
 import com.atlauncher.serversetup.utils.HashUtils;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,7 +29,6 @@ import java.net.SocketException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.zip.GZIPInputStream;
 
 public class Downloadable {
     private HttpURLConnection connection;
@@ -41,7 +38,6 @@ public class Downloadable {
     private String hash;
 
     private int size = -1;
-    private int attempts = 0;
 
     public Downloadable(String url, Path saveTo, String hash) {
         this.url = url;
@@ -117,21 +113,12 @@ public class Downloadable {
         return this.hash;
     }
 
-    public boolean isGziped() {
-        if (getConnection().getContentEncoding() == null) {
-            return false;
-        } else {
-            return getConnection().getContentEncoding().equalsIgnoreCase("gzip");
-        }
-    }
-
     public HttpURLConnection getConnection() {
         if (this.connection == null) {
             try {
                 this.connection = (HttpURLConnection) new URL(this.url).openConnection();
                 this.connection.setUseCaches(false);
                 this.connection.setDefaultUseCaches(false);
-                this.connection.setRequestProperty("Accept-Encoding", "gzip");
                 this.connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) " +
                         "AppleWebKit/537" + ".36 (KHTML, like Gecko) Chrome/28.0.1500.72 Safari/537.36");
                 this.connection.setRequestProperty("Cache-Control", "no-store,max-age=0,no-cache");
@@ -156,11 +143,7 @@ public class Downloadable {
         InputStream in = null;
         OutputStream writer = null;
         try {
-            if (isGziped()) {
-                in = new GZIPInputStream(getConnection().getInputStream());
-            } else {
-                in = getConnection().getInputStream();
-            }
+            in = getConnection().getInputStream();
             writer = Files.newOutputStream(this.saveTo);
             byte[] buffer = new byte[2048];
             int bytesRead = 0;
@@ -193,11 +176,7 @@ public class Downloadable {
         StringBuilder response;
         try {
             InputStream in = null;
-            if (isGziped()) {
-                in = new GZIPInputStream(getConnection().getInputStream());
-            } else {
-                in = getConnection().getInputStream();
-            }
+            in = getConnection().getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             response = new StringBuilder();
             String inputLine;
@@ -215,7 +194,7 @@ public class Downloadable {
     }
 
     public void download() {
-        this.attempts = 0;
+        int attempts = 0;
         if (this.connection != null) {
             this.connection.disconnect();
             this.connection = null;
@@ -238,6 +217,7 @@ public class Downloadable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         if (getHash().equalsIgnoreCase("-")) {
             // No hash so only download once
             downloadFile();
