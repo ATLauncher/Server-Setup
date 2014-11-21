@@ -183,6 +183,7 @@ public class Downloadable {
 
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
+                response.append('\n');
             }
             in.close();
         } catch (IOException e) {
