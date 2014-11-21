@@ -20,7 +20,13 @@ package com.atlauncher.serversetup;
 import com.atlauncher.serversetup.data.Download;
 import com.atlauncher.serversetup.data.Downloadable;
 import com.atlauncher.serversetup.data.Pack;
+import com.atlauncher.serversetup.gui.Browser;
 import com.google.gson.Gson;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
@@ -105,13 +112,33 @@ public class Bootstrap {
         System.out.println("Setting up the server!");
 
         for (Download download : pack.getDownloads()) {
+            if (isHeadless && download.isBrowserDownload()) {
+                System.err.println("In headless environment so cannot download " + download.getURL() + " to " +
+                        download.getPath(basePath).toAbsolutePath() + "! Please do this manually!");
+                continue;
+            }
+
             if (!isHeadless) {
                 doingLabel.setText("Downloading " + download.getFilename());
                 progressBar.setValue(30);
             }
-            System.out.println("Downloading " + download.getURL() + " to " + download.getPath(basePath)
-                    .toAbsolutePath());
-            download.getDownloadable(basePath).download();
+
+            if (download.isBrowserDownload()) {
+                Browser browser = new Browser(download.getPath(basePath));
+                browser.setVisible(true);
+                browser.loadURL("http://www.atlauncher.com/downloads");
+                while (browser.isDisplayable()) {
+                    System.out.println("Waiting for download to " + download.getPath(basePath).toAbsolutePath() + "!");
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                System.out.println("Downloading " + download.getURL() + " to " + download.getPath(basePath).toAbsolutePath());
+                download.getDownloadable(basePath).download();
+            }
         }
 
         if (!isHeadless) {

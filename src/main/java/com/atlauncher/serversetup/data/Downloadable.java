@@ -125,7 +125,7 @@ public class Downloadable {
         }
     }
 
-    private HttpURLConnection getConnection() {
+    public HttpURLConnection getConnection() {
         if (this.connection == null) {
             try {
                 this.connection = (HttpURLConnection) new URL(this.url).openConnection();
@@ -232,9 +232,9 @@ public class Downloadable {
                 return;
             }
         }
-        // Create the directory structure
+
         try {
-            Files.createDirectories(this.saveTo);
+            Files.createFile(this.saveTo);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -290,5 +290,10 @@ public class Downloadable {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public boolean isDownloadable() {
+        return getConnection().getContentType().equalsIgnoreCase("application/zip") || getConnection().getContentType
+                ().equalsIgnoreCase("application/jar");
     }
 }

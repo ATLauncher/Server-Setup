@@ -24,6 +24,7 @@ public class Download {
     private String url;
     private String path;
     private String hash;
+    private boolean browser;
 
     public String getURL() {
         return url;
@@ -39,5 +40,9 @@ public class Download {
 
     public String getFilename() {
         return this.filename;
+    }
+
+    public boolean isBrowserDownload() {
+        return this.browser;
     }
 }
