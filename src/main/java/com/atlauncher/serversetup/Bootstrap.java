@@ -44,7 +44,7 @@ public class Bootstrap {
     public static Path basePath = Paths.get("");
     public static Path jsonFile = basePath.resolve("pack.json");
     public static final Gson GSON = new Gson();
-    public static boolean isHeadless = GraphicsEnvironment.getLocalGraphicsEnvironment().isHeadlessInstance();
+    public static boolean isHeadless = true;
     public static Pack pack;
     public static JLabel doingLabel;
     public static JProgressBar progressBar;
@@ -52,6 +52,13 @@ public class Bootstrap {
     public static void main(String[] args) {
         Locale.setDefault(Locale.ENGLISH); // Set English as the default locale
         System.setProperty("java.net.preferIPv4Stack", "true");
+
+        try {
+            isHeadless = GraphicsEnvironment.getLocalGraphicsEnvironment().isHeadlessInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+            isHeadless = true;
+        }
 
         if (!Files.exists(jsonFile)) {
             System.err.println("Error setting up the server. The file " + jsonFile.toAbsolutePath() + " doesn't " +
@@ -130,7 +137,8 @@ public class Bootstrap {
                     }
                 }
             } else {
-                System.out.println("Downloading " + download.getURL() + " to " + download.getPath(basePath).toAbsolutePath());
+                System.out.println("Downloading " + download.getURL() + " to " + download.getPath(basePath)
+                        .toAbsolutePath());
                 download.getDownloadable(basePath).download();
             }
         }

@@ -6,7 +6,7 @@
 	<groupId>com.atlauncher</groupId>
 	<artifactId>serversetup</artifactId>
 	<name>ATLauncher Server Setup</name>
-	<version>1.0.0.0</version>
+	<version>1.0.0.1</version>
 	<organization>
 		<name>ATLauncher</name>
 		<url>http://www.github.com/ATLauncher/</url>
